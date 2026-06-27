@@ -1,0 +1,303 @@
+.student-container {
+  padding: 20px;
+}
+
+.exam-grid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.exam-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.question-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.result-card {
+  max-width: 500px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+}
+
+.student-btn {
+  background: #2563EB;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.question-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.option-btn:hover {
+  background: #f1f5f9;
+}
+.exam-container {
+  padding: 20px;
+}
+
+.exam-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.exam-layout {
+  display: flex;
+  gap: 20px;
+}
+
+/* LEFT NAV */
+.exam-sidebar {
+  width: 120px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.nav-btn {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.nav-btn.active {
+  background: #2563eb;
+  color: white;
+}
+
+/* CONTENT */
+.exam-content {
+  flex: 1;
+}
+
+/* ACTIONS */
+.exam-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .exam-layout {
+    flex-direction: column;
+  }
+
+  .exam-sidebar {
+    width: 100%;
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+/* ================================
+   GLOBAL MOBILE IMPROVEMENTS
+================================ */
+@media (max-width: 768px) {
+
+  h1 {
+    font-size: 20px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  h3 {
+    font-size: 16px;
+  }
+
+  p {
+    font-size: 14px;
+  }
+
+  /* buttons full width on mobile */
+  .student-btn {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  /* exam cards spacing fix */
+  .exam-card {
+    padding: 15px;
+  }
+
+  /* result cards */
+  .result-card {
+    width: 100%;
+    padding: 20px;
+  }
+}
+/* ================================
+   STUDENT LAYOUT RESPONSIVE
+================================ */
+@media (max-width: 768px) {
+
+  .student-sidebar {
+    width: 100% !important;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    overflow-x: auto;
+    padding: 10px;
+  }
+
+  .student-sidebar button {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .student-main {
+    padding: 10px;
+  }
+
+}
+/* =========================
+   STUDENT LAYOUT FIX (GLOBAL)
+========================= */
+
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #0f172a;
+  color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.logo {
+  color: white;
+}
+
+/* MAIN CONTENT */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* SIDEBAR BUTTONS */
+.sidebar button {
+  padding: 10px;
+  background: transparent;
+  color: white;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  cursor: pointer;
+  text-align: left;
+}
+/* =========================
+   MODAL SYSTEM (CBT STYLE)
+========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  animation: pop 0.2s ease-in-out;
+}
+
+.modal-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+
+.modal-message {
+  margin-bottom: 20px;
+  color: #444;
+}
+
+.modal-btn {
+  padding: 10px 16px;
+  background: #2563eb;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* animation */
+@keyframes pop {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* LOGOUT */
+.sidebar button:last-child {
+  margin-top: auto;
+  background: #dc2626;
+  border: none;
+}
+@media (max-width: 768px) {
+
+  .layout-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .sidebar button {
+    flex: 1;
+    font-size: 12px;
+    padding: 8px;
+    text-align: center;
+  }
+
+  .main-content {
+    padding: 10px;
+  }
+}
