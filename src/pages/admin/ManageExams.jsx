@@ -54,32 +54,51 @@ export default function ManageExams() {
       ) : (
         <table border="1" cellPadding="10">
           <thead>
-            <tr>
-              <th>ID</th>
-              <th>Title</th>
-              <th>Duration (mins)</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
+  <tr>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Duration</th>
+    <th>Retake</th>
+    <th>Show Answers</th>
+    <th>Show Explanations</th>
+    <th>Action</th>
+  </tr>
+</thead>
           <tbody>
-            {exams.map((exam) => (
-              <tr key={exam.id}>
-                <td>{exam.id}</td>
-                <td>{exam.title}</td>
-                <td>{exam.duration}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      deleteExam(exam.id)
-                    }
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {exams.map((exam) => (
+    <tr key={exam.id}>
+      <td>{exam.id}</td>
+
+      <td>{exam.title}</td>
+
+      <td>
+        {exam.unlimited_time
+          ? "Unlimited"
+          : `${exam.duration} mins`}
+      </td>
+
+      <td>
+        {exam.allow_retake ? "? Yes" : "? No"}
+      </td>
+
+      <td>
+        {exam.show_answers ? "? Yes" : "? No"}
+      </td>
+
+      <td>
+        {exam.show_explanations ? "? Yes" : "? No"}
+      </td>
+
+      <td>
+        <button
+          onClick={() => deleteExam(exam.id)}
+        >
+          Delete
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
         </table>
       )}
    </AdminLayout>

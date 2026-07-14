@@ -16,13 +16,14 @@ export default function AddQuestion() {
   const [editId, setEditId] = useState(null);
 
   const [form, setForm] = useState({
-    question: "",
-    a: "",
-    b: "",
-    c: "",
-    d: "",
-    correct: "",
-  });
+  question: "",
+  a: "",
+  b: "",
+  c: "",
+  d: "",
+  correct: "",
+  explanation: "",
+});
 
   // =====================
   // LOAD EXAMS
@@ -62,14 +63,15 @@ export default function AddQuestion() {
         });
       } else {
         await API.post("/exams/question", {
-          exam_id: examId,
-          question: form.question,
-          option_a: form.a,
-          option_b: form.b,
-          option_c: form.c,
-          option_d: form.d,
-          correct_option: form.correct,
-        });
+  exam_id: examId,
+  question: form.question,
+  option_a: form.a,
+  option_b: form.b,
+  option_c: form.c,
+  option_d: form.d,
+  correct_option: form.correct,
+  explanation: form.explanation,
+});
       }
 
       resetForm();
@@ -93,26 +95,27 @@ export default function AddQuestion() {
   const startEdit = (q) => {
     setEditId(q.id);
     setForm({
-      question: q.question,
-      a: q.option_a,
-      b: q.option_b,
-      c: q.option_c,
-      d: q.option_d,
-      correct: q.correct_option,
-    });
+  question: q.question,
+  a: q.option_a,
+  b: q.option_b,
+  c: q.option_c,
+  d: q.option_d,
+  correct: q.correct_option,
+  explanation: q.explanation || "",
+});
   };
 
   const resetForm = () => {
     setEditId(null);
     setForm({
-      question: "",
-      a: "",
-      b: "",
-      c: "",
-      d: "",
-      correct: "",
-    });
-  };
+  question: "",
+  a: "",
+  b: "",
+  c: "",
+  d: "",
+  correct: "",
+  explanation: "",
+});  };
 
   // =====================
   // FILTER + PAGINATION
@@ -182,7 +185,17 @@ export default function AddQuestion() {
             value={form.correct}
             onChange={(e) => setForm({ ...form, correct: e.target.value })}
           />
-
+		<textarea
+  placeholder="Explanation (shown after exam if enabled)"
+  value={form.explanation}
+  onChange={(e) =>
+    setForm({
+      ...form,
+      explanation: e.target.value,
+    })
+  }
+  rows={4}
+/>
           <button onClick={saveQuestion}>
             {editId ? "Update Question" : "Add Question"}
           </button>
@@ -216,7 +229,11 @@ export default function AddQuestion() {
               </div>
 
               <p><b>Correct:</b> {q.correct_option}</p>
-
+		{q.explanation && (
+  <p>
+    <b>Explanation:</b> {q.explanation}
+  </p>
+)}
               <div className="actions">
                 <button onClick={() => startEdit(q)}>Edit</button>
                 <button onClick={() => deleteQuestion(q.id)}>Delete</button>

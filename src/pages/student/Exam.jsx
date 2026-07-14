@@ -23,8 +23,12 @@ export default function Exam() {
   const [submitted, setSubmitted] = useState(false);
   const [exam, setExam] = useState(null);
   const [warningMessage, setWarningMessage] = useState("");
+
 const [remaining, setRemaining] = useState(null);
 const warningCount = useRef(0);
+const containsMath = (text = "") => {
+  return /\\\(|\\\[|\$|\\frac|\\sqrt|\\sum|\\int|\\alpha|\\beta|\\theta|\\pi|\\sin|\\cos|\\tan/.test(text);
+};
 const saveTimeout = useRef(null);
 const MAX_WARNINGS = 3;
 
@@ -140,9 +144,14 @@ const showModal = (title, message) => {
   }
 };
 
-const checkIfAlreadyTaken = async () => {
+const checkIfAlreadyTaken = async (examData) => {
   try {
     await API.get(`/exams/result/${examId}`);
+
+    // Student may retake this exam
+    if (examData.allow_retake) {
+      return false;
+    }
 
     showModal(
       "Exam Completed",
@@ -168,6 +177,7 @@ const checkIfAlreadyTaken = async () => {
     return true;
   }
 };
+
 const saveToServer = async (data) => {
   try {
     await API.post("/exams/progress", {
@@ -193,18 +203,27 @@ const loadProgress = async () => {
 
 const fetchExam = async () => {
   const res = await API.get(`/exams/${examId}`);
-  setExam(res.data);
-};
 
+  setExam(res.data);
+
+  return res.data;
+};
 const loadRemainingTime = async () => {
   try {
     const res = await API.get(`/exams/${examId}/remaining-time`);
 
-    if (res.data?.remaining !== undefined) {
+    // Unlimited exam
+    if (res.data.unlimited) {
+      setRemaining(null);
+      return;
+    }
+
+    if (typeof res.data.remaining === "number") {
       setRemaining(res.data.remaining);
     } else {
       setRemaining(0);
     }
+
   } catch (err) {
     console.log("Failed to load timer:", err);
     setRemaining(0);
@@ -214,16 +233,16 @@ useEffect(() => {
   if (!examId) return;
 
   const init = async () => {
-    await fetchExam();
+  const examData = await fetchExam();
 
-    const taken = await checkIfAlreadyTaken();
-    if (taken) return;
+  const taken = await checkIfAlreadyTaken(examData);
 
-    await fetchQuestions();
-    await loadProgress();
-    await loadRemainingTime();
-  };
+  if (taken) return;
 
+  await fetchQuestions();
+  await loadProgress();
+  await loadRemainingTime();
+};
   init();
 
   document.addEventListener("visibilitychange", handleVisibilityChange);
@@ -373,10 +392,14 @@ if (modal.show) {
     )}
 
     {/* TIMER */}
-   {typeof remaining === "number" && remaining > 0 && (
-  <Timer seconds={remaining} onExpire={submitExam} />
+   {!exam?.unlimited_time &&
+  typeof remaining === "number" &&
+  remaining > 0 && (
+    <Timer
+      seconds={remaining}
+      onExpire={submitExam}
+    />
 )}
-
     
 
       <h2>CBT Exam (Secure Mode)</h2>
@@ -393,11 +416,15 @@ if (modal.show) {
 >
   Answered: {Object.keys(answers).length} / {questions.length}
 </p>
-<MathJax dynamic key={question.id}>
-    <p style={{ fontWeight: "bold" }}></p>
-  {question.question}
-</MathJax>
-
+{containsMath(question.question) ? (
+  <MathJax dynamic key={question.id}>
+    {question.question}
+  </MathJax>
+) : (
+  <p style={{ fontWeight: "bold", whiteSpace: "pre-wrap" }}>
+    {question.question}
+  </p>
+)}
       {/* OPTIONS */}
    
 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -429,10 +456,15 @@ if (modal.show) {
   transition: "all 0.2s ease",
   boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
 }}      >
-        <MathJax dynamic>
-          {opt}. {value}
-        </MathJax>
-      </button>
+        {containsMath(value) ? (
+  <MathJax dynamic>
+    {opt}. {value}
+  </MathJax>
+) : (
+  <span>
+    <strong>{opt}.</strong> {value}
+  </span>
+)}      </button>
     );
   })}
 
